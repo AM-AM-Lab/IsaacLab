@@ -60,7 +60,9 @@ DRONE_AM_CFG = MultirotorCfg(
         pos=(0.0, 0.0, 0.0),
         lin_vel=(0.0, 0.0, 0.0),
         ang_vel=(0.0, 0.0, 0.0),
-        rot=(1.0, 0.0, 0.0, 0.0),
+        # NED body frame (X forward, Y right, Z down) relative to default world/body convention.
+        # Apply 180 deg rotation about X axis: q = [w, x, y, z] = [0, 1, 0, 0].
+        rot=(0.0, 1.0, 0.0, 0.0),
         rps={
             "rotor_0": 200.0,
             "rotor_1": 200.0,
