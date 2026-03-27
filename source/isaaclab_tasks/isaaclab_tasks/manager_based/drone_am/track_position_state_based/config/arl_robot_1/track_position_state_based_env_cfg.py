@@ -81,8 +81,8 @@ class ActionsCfg:
     # 12桨推力动作：processed = raw * scale + offset，并做 clip
     thrust_command = mdp.ThrustActionCfg(
         asset_name="robot",
-        scale=3.0,
-        offset=3.0,
+        scale=8.0,
+        offset=14.0,
         preserve_order=False,
         use_default_offset=False,
         bind_joint_velocity_to_thrust=True,
@@ -105,18 +105,18 @@ class ActionsCfg:
         use_rotor_directions_for_joint_velocity=True,
         write_joint_velocity_to_sim=True,
         clip={
-            "rotor_0": (0.0, 6.0),
-            "rotor_1": (0.0, 6.0),
-            "rotor_2": (0.0, 6.0),
-            "rotor_3": (0.0, 6.0),
-            "rotor_4": (0.0, 6.0),
-            "rotor_5": (0.0, 6.0),
-            "rotor_6": (0.0, 6.0),
-            "rotor_7": (0.0, 6.0),
-            "rotor_8": (0.0, 6.0),
-            "rotor_9": (0.0, 6.0),
-            "rotor_10": (0.0, 6.0),
-            "rotor_11": (0.0, 6.0),
+            "rotor_0": (0.0, 25.0),
+            "rotor_1": (0.0, 25.0),
+            "rotor_2": (0.0, 25.0),
+            "rotor_3": (0.0, 25.0),
+            "rotor_4": (0.0, 25.0),
+            "rotor_5": (0.0, 25.0),
+            "rotor_6": (0.0, 25.0),
+            "rotor_7": (0.0, 25.0),
+            "rotor_8": (0.0, 25.0),
+            "rotor_9": (0.0, 25.0),
+            "rotor_10": (0.0, 25.0),
+            "rotor_11": (0.0, 25.0),
         },
     )
 
@@ -167,7 +167,7 @@ class EventCfg:
             "pose_range": {
                 "x": (-1.0, 1.0),
                 "y": (-1.0, 1.0),
-                "z": (-1.0, 1.0),
+                "z": (0.8, 1.5),
                 # "yaw": (-math.pi / 6.0, math.pi / 6.0),
                 # "roll": (-math.pi / 6.0, math.pi / 6.0),
                 # "pitch": (-math.pi / 6.0, math.pi / 6.0),
@@ -178,7 +178,7 @@ class EventCfg:
             "velocity_range": {
                 "x": (-0.2, 0.2),
                 "y": (-0.2, 0.2),
-                "z": (-0.2, 0.2),
+                "z": (-0.05, 0.05),
                 "roll": (-0.0, 0.0),
                 "pitch": (-0.0, 0.0),
                 "yaw": (-0.0, 0.0),
@@ -265,7 +265,7 @@ class TerminationsCfg:
     # 到最大时长结束
     time_out = DoneTerm(func=mdp.time_out, time_out=True)
     # 高度低于阈值视为坠落
-    crash = DoneTerm(func=mdp.root_height_below_minimum, params={"minimum_height": -3.0})
+    crash = DoneTerm(func=mdp.root_height_below_minimum, params={"minimum_height": 0.0})
 
 
 ##

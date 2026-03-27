@@ -21,7 +21,7 @@ from isaaclab_contrib.assets import MultirotorCfg
 ##
 
 DRONE_AM_THRUSTER = ThrusterCfg(
-    thrust_range=(0.1, 10.0),
+    thrust_range=(0.1, 30.0),
     thrust_const_range=(9.26312e-06, 1.826312e-05),
     tau_inc_range=(0.05, 0.08),
     tau_dec_range=(0.005, 0.005),
@@ -60,9 +60,7 @@ DRONE_AM_CFG = MultirotorCfg(
         pos=(0.0, 0.0, 0.0),
         lin_vel=(0.0, 0.0, 0.0),
         ang_vel=(0.0, 0.0, 0.0),
-        # NED body frame (X forward, Y right, Z down) relative to default world/body convention.
-        # Apply 180 deg rotation about X axis: q = [w, x, y, z] = [0, 1, 0, 0].
-        rot=(0.0, 1.0, 0.0, 0.0),
+        rot=(1.0, 0.0, 0.0, 0.0),
         rps={
             "rotor_0": 200.0,
             "rotor_1": 200.0,
