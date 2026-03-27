@@ -1,0 +1,610 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="AM20">
+  <!--
+    AM20 = AM-base (drone) + RM65-6F arm.
+
+    Frame convention requested:
+    - Overall base frame is drone base_link.
+    - Arm base frame: Z axis aligned with drone Z.
+    - Arm base is translated +1.5 mm along Z from drone base.
+    - Arm X/Y are opposite to drone X/Y => rotate 180 deg around Z.
+
+    NOTE:
+    - If your tool cannot resolve package://AM-base/... mesh path, replace it with a local path.
+  -->
+
+  <!-- ======================= -->
+  <!-- Drone base (overall base) -->
+  <!-- ======================= -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="-0.00048281 -0.0036283 -0.058543" rpy="0 0 0" />
+      <mass value="13.818" />
+      <inertia ixx="0.27248" ixy="-0.003316" ixz="0.0045127" iyy="0.28111" iyz="0.0060196" izz="0.45779" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/base_link.STL" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="">
+        <color rgba="0.6 0.6 0.6 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/base_link.STL" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- ======================= -->
+  <!-- Rotors (from model.sdf) -->
+  <!-- ======================= -->
+  <!--
+    Mapping requested:
+    sdf 0/6 -> urdf 10/11
+    sdf 1/7 -> urdf 8/9
+    sdf 2/8 -> urdf 6/7
+    sdf 3/9 -> urdf 4/5
+    sdf 4/10 -> urdf 2/3
+    sdf 5/11 -> urdf 0/1
+  -->
+
+  <link name="rotor_0">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.015" />
+      <inertia ixx="0.00025" ixy="0" ixz="0" iyy="0.000002" iyz="0" izz="0.00025" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/prop_13.STL" scale="0.001 -0.001 -0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.006" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.008" radius="0.229" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="rotor_0_joint" type="continuous">
+    <origin xyz="0.3081 0.1408 -0.0727" rpy="-0.5236 0 0.5236" />
+    <parent link="base_link" />
+    <child link="rotor_0" />
+    <axis xyz="0 0 1" />
+    <limit effort="10" velocity="900" />
+    <dynamics damping="0.005" friction="0.0" />
+  </joint>
+
+  <link name="rotor_1">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.015" />
+      <inertia ixx="0.00025" ixy="0" ixz="0" iyy="0.000002" iyz="0" izz="0.00025" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/prop_13.STL" scale="-0.001 -0.001 -0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.006" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.008" radius="0.229" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="rotor_1_joint" type="continuous">
+    <origin xyz="0.2645 0.2164 0.0785" rpy="-0.5236 0 0.5236" />
+    <parent link="base_link" />
+    <child link="rotor_1" />
+    <axis xyz="0 0 1" />
+    <limit effort="10" velocity="900" />
+    <dynamics damping="0.005" friction="0.0" />
+  </joint>
+
+  <link name="rotor_2">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.015" />
+      <inertia ixx="0.00025" ixy="0" ixz="0" iyy="0.000002" iyz="0" izz="0.00025" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/prop_13.STL" scale="-0.001 -0.001 -0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.006" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.008" radius="0.229" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="rotor_2_joint" type="continuous">
+    <origin xyz="-0.0501 0.3372 -0.1039" rpy="0.5236 0 1.5708" />
+    <parent link="base_link" />
+    <child link="rotor_2" />
+    <axis xyz="0 0 1" />
+    <limit effort="10" velocity="900" />
+    <dynamics damping="0.005" friction="0.0" />
+  </joint>
+
+  <link name="rotor_3">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.015" />
+      <inertia ixx="0.00025" ixy="0" ixz="0" iyy="0.000002" iyz="0" izz="0.00025" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/prop_13.STL" scale="0.001 -0.001 -0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.006" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.008" radius="0.229" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="rotor_3_joint" type="continuous">
+    <origin xyz="0.0372 0.3372 0.0473" rpy="0.5236 0 1.5708" />
+    <parent link="base_link" />
+    <child link="rotor_3" />
+    <axis xyz="0 0 1" />
+    <limit effort="10" velocity="900" />
+    <dynamics damping="0.005" friction="0.0" />
+  </joint>
+
+  <link name="rotor_4">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.015" />
+      <inertia ixx="0.00025" ixy="0" ixz="0" iyy="0.000002" iyz="0" izz="0.00025" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/prop_13.STL" scale="0.001 -0.001 -0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.006" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.008" radius="0.229" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="rotor_4_joint" type="continuous">
+    <origin xyz="-0.2760 0.1965 -0.0727" rpy="-0.5236 0 2.6180" />
+    <parent link="base_link" />
+    <child link="rotor_4" />
+    <axis xyz="0 0 1" />
+    <limit effort="10" velocity="900" />
+    <dynamics damping="0.005" friction="0.0" />
+  </joint>
+
+  <link name="rotor_5">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.015" />
+      <inertia ixx="0.00025" ixy="0" ixz="0" iyy="0.000002" iyz="0" izz="0.00025" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/prop_13.STL" scale="-0.001 -0.001 -0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.006" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.008" radius="0.229" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="rotor_5_joint" type="continuous">
+    <origin xyz="-0.3196 0.1209 0.0785" rpy="-0.5236 0 2.6180" />
+    <parent link="base_link" />
+    <child link="rotor_5" />
+    <axis xyz="0 0 1" />
+    <limit effort="10" velocity="900" />
+    <dynamics damping="0.005" friction="0.0" />
+  </joint>
+
+  <link name="rotor_6">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.015" />
+      <inertia ixx="0.00025" ixy="0" ixz="0" iyy="0.000002" iyz="0" izz="0.00025" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/prop_13.STL" scale="-0.001 -0.001 -0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.006" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.008" radius="0.229" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="rotor_6_joint" type="continuous">
+    <origin xyz="-0.2670 -0.2121 -0.1039" rpy="0.5236 0 -2.6180" />
+    <parent link="base_link" />
+    <child link="rotor_6" />
+    <axis xyz="0 0 1" />
+    <limit effort="10" velocity="900" />
+    <dynamics damping="0.005" friction="0.0" />
+  </joint>
+
+  <link name="rotor_7">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.015" />
+      <inertia ixx="0.00025" ixy="0" ixz="0" iyy="0.000002" iyz="0" izz="0.00025" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/prop_13.STL" scale="0.001 -0.001 -0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.006" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.008" radius="0.229" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="rotor_7_joint" type="continuous">
+    <origin xyz="-0.3106 -0.1365 0.0473" rpy="0.5236 0 -2.6180" />
+    <parent link="base_link" />
+    <child link="rotor_7" />
+    <axis xyz="0 0 1" />
+    <limit effort="10" velocity="900" />
+    <dynamics damping="0.005" friction="0.0" />
+  </joint>
+
+  <link name="rotor_8">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.015" />
+      <inertia ixx="0.00025" ixy="0" ixz="0" iyy="0.000002" iyz="0" izz="0.00025" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/prop_13.STL" scale="0.001 -0.001 -0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.006" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.008" radius="0.229" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="rotor_8_joint" type="continuous">
+    <origin xyz="-0.0321 -0.3372 -0.0727" rpy="-0.5236 0 -1.5708" />
+    <parent link="base_link" />
+    <child link="rotor_8" />
+    <axis xyz="0 0 1" />
+    <limit effort="10" velocity="900" />
+    <dynamics damping="0.005" friction="0.0" />
+  </joint>
+
+  <link name="rotor_9">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.015" />
+      <inertia ixx="0.00025" ixy="0" ixz="0" iyy="0.000002" iyz="0" izz="0.00025" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/prop_13.STL" scale="-0.001 -0.001 -0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.006" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.008" radius="0.229" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="rotor_9_joint" type="continuous">
+    <origin xyz="0.0552 -0.3372 0.0785" rpy="-0.5236 0 -1.5708" />
+    <parent link="base_link" />
+    <child link="rotor_9" />
+    <axis xyz="0 0 1" />
+    <limit effort="10" velocity="900" />
+    <dynamics damping="0.005" friction="0.0" />
+  </joint>
+
+  <link name="rotor_10">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.015" />
+      <inertia ixx="0.00025" ixy="0" ixz="0" iyy="0.000002" iyz="0" izz="0.00025" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/prop_13.STL" scale="-0.001 -0.001 -0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.006" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.008" radius="0.229" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="rotor_10_joint" type="continuous">
+    <origin xyz="0.3171 -0.1252 -0.1039" rpy="0.5236 0 -0.5236" />
+    <parent link="base_link" />
+    <child link="rotor_10" />
+    <axis xyz="0 0 1" />
+    <limit effort="10" velocity="900" />
+    <dynamics damping="0.005" friction="0.0" />
+  </joint>
+
+  <link name="rotor_11">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.015" />
+      <inertia ixx="0.00025" ixy="0" ixz="0" iyy="0.000002" iyz="0" izz="0.00025" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/prop_13.STL" scale="0.001 -0.001 -0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.006" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.008" radius="0.229" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="rotor_11_joint" type="continuous">
+    <origin xyz="0.2735 -0.2008 0.0473" rpy="0.5236 0 -0.5236" />
+    <parent link="base_link" />
+    <child link="rotor_11" />
+    <axis xyz="0 0 1" />
+    <limit effort="10" velocity="900" />
+    <dynamics damping="0.005" friction="0.0" />
+  </joint>
+
+  <!-- ======================= -->
+  <!-- RM65-6F arm (prefixed) -->
+  <!-- ======================= -->
+
+  <link name="rm_base_link">
+    <inertial>
+      <origin xyz="-0.00049840293879996 -5.19350047653785E-05 0.0600202841321701" rpy="0 0 0" />
+      <mass value="0.838885281114303" />
+      <inertia ixx="0.00172321229549441" ixy="3.09076898315635E-06" ixz="-3.7922126488402E-05" iyy="0.00170514762495823" iyz="1.38793642017112E-06" izz="0.000901589030906685" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/rm_65_arm/base_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/rm_65_arm/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Mount arm to drone base: +1.5mm in Z, and flip X/Y by yaw=pi -->
+  <joint name="rm65_mount_joint" type="fixed">
+    <origin xyz="0 0 0.0015" rpy="0 0 3.141592653589793" />
+    <parent link="base_link" />
+    <child link="rm_base_link" />
+  </joint>
+
+  <link name="rm_Link1">
+    <inertial>
+      <origin xyz="-2.05546069214312E-07 0.0211077047188954 -0.0251861970792274" rpy="0 0 0" />
+      <mass value="0.593542243994357" />
+      <inertia ixx="0.00126611498055767" ixy="-5.09885204907085E-09" ixz="-6.36116302372232E-09" iyy="0.00118165919048932" iyz="-0.000211204511668188" izz="0.000561320297380402" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/rm_65_arm/Link1.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/rm_65_arm/Link1.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="rm_joint1" type="revolute">
+    <origin xyz="0 0 0.2405" rpy="0 0 0" />
+    <parent link="rm_base_link" />
+    <child link="rm_Link1" />
+    <axis xyz="0 0 -1" />
+    <limit lower="-3.105" upper="3.105" effort="60" velocity="3.14" />
+  </joint>
+
+  <link name="rm_Link2">
+    <inertial>
+      <origin xyz="0.152256777078729 5.03020745195745E-07 -0.00620261689688585" rpy="0 0 0" />
+      <mass value="0.86417584142394" />
+      <inertia ixx="0.000632536249619478" ixy="-1.50829601286586E-08" ixz="0.000421628477937965" iyy="0.00205272279459906" iyz="3.72279302448935E-09" izz="0.00195281592383166" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/rm_65_arm/Link2.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/rm_65_arm/Link2.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="rm_joint2" type="revolute">
+    <origin xyz="0 0 0" rpy="1.5708 -1.5708 0" />
+    <parent link="rm_Link1" />
+    <child link="rm_Link2" />
+    <axis xyz="0 0 1" />
+    <limit lower="-2.269" upper="2.269" effort="60" velocity="3.14" />
+  </joint>
+
+  <link name="rm_Link3">
+    <inertial>
+      <origin xyz="4.51889143251529E-06 -0.0595928812560097 0.0105690421381407" rpy="0 0 0" />
+      <mass value="0.289643824525119" />
+      <inertia ixx="0.000637363594961081" ixy="-5.74855022778973E-08" ixz="-3.30883733392731E-08" iyy="0.000156488205208169" iyz="-0.000144608155860483" izz="0.000614175003514739" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/rm_65_arm/Link3.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/rm_65_arm/Link3.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="rm_joint3" type="revolute">
+    <origin xyz="0.256 0 0" rpy="0 0 1.5708" />
+    <parent link="rm_Link2" />
+    <child link="rm_Link3" />
+    <axis xyz="0 0 1" />
+    <limit lower="-2.356" upper="2.356" effort="30" velocity="3.14" />
+  </joint>
+
+  <link name="rm_Link4">
+    <inertial>
+      <origin xyz="1.32071622473062E-06 -0.0180437560522369 -0.0215381587841798" rpy="0 0 0" />
+      <mass value="0.239430992940448" />
+      <inertia ixx="0.00028594979957681" ixy="-2.14337423072154E-09" ixz="1.40294693820984E-09" iyy="0.000262735545580892" iyz="4.4240809689715E-05" izz="0.000119899058385996" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/rm_65_arm/Link4.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/rm_65_arm/Link4.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="rm_joint4" type="revolute">
+    <origin xyz="0 -0.21 0" rpy="1.5708 0 0" />
+    <parent link="rm_Link3" />
+    <child link="rm_Link4" />
+    <axis xyz="0 0 -1" />
+    <limit lower="-3.106" upper="3.106" effort="10" velocity="3.14" />
+  </joint>
+
+  <link name="rm_Link5">
+    <inertial>
+      <origin xyz="4.23948957018841E-06 -0.0593817487603215 0.00736779587750847" rpy="0 0 0" />
+      <mass value="0.21879527056675" />
+      <inertia ixx="0.00035053124249399" ixy="-3.11297051636039E-08" ixz="-1.70875238293736E-08" iyy="0.00010492541026997" iyz="-7.82406705228082E-05" izz="0.000334471302428861" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/rm_65_arm/Link5.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/rm_65_arm/Link5.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="rm_joint5" type="revolute">
+    <origin xyz="0 0 0" rpy="-1.5708 0 0" />
+    <parent link="rm_Link4" />
+    <child link="rm_Link5" />
+    <axis xyz="0 0 1" />
+    <limit lower="-2.234" upper="2.234" effort="10" velocity="3.14" />
+  </joint>
+
+  <link name="rm_Link6">
+    <inertial>
+      <origin xyz="0.000138559985614397 -0.00574537418929974 -0.535986173384404" rpy="0 0 0" />
+      <mass value="3.04449097371379" />
+      <inertia ixx="0.170810328289537" ixy="5.3822775672348E-07" ixz="0.000151207460728544" iyy="0.169967421523245" iyz="0.00105777172655597" izz="0.00305546066386606" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/rm_65_arm/Link6.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/rm_65_arm/Link6.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="rm_joint6" type="revolute">
+    <origin xyz="0 -0.1613 0" rpy="1.5708 0 0" />
+    <parent link="rm_Link5" />
+    <child link="rm_Link6" />
+    <axis xyz="0 0 1" />
+    <limit lower="-6.28" upper="6.28" effort="10" velocity="3.14" />
+  </joint>
+</robot>

@@ -147,6 +147,46 @@ class ThrustAction(ActionTerm):
             # Use default thruster RPS as offset
             self._offset = self._asset.data.default_thruster_rps[:, self._thruster_ids].clone()
 
+        # optional: bind rotor joint velocity to thrust command
+        self._bind_joint_velocity = bool(self.cfg.bind_joint_velocity_to_thrust)
+        self._rotor_joint_ids = None
+        self._joint_velocity_sign = None
+        if self._bind_joint_velocity:
+            if self.cfg.joint_names_expr is None:
+                joint_names_expr = [f"{name}_joint" for name in self._thruster_names]
+            else:
+                joint_names_expr = self.cfg.joint_names_expr
+
+            self._rotor_joint_ids, rotor_joint_names = self._asset.find_joints(
+                joint_names_expr, preserve_order=self.cfg.preserve_order
+            )
+
+            if len(self._rotor_joint_ids) != self.action_dim:
+                raise ValueError(
+                    "Rotor joint count mismatch for thrust-to-joint binding. "
+                    f"Expected {self.action_dim}, got {len(self._rotor_joint_ids)}. "
+                    f"Resolved joints: {rotor_joint_names}."
+                )
+
+            # sign for joint velocity from rotor directions (CW/CCW)
+            self._joint_velocity_sign = torch.ones(self.num_envs, self.action_dim, device=self.device)
+            if self.cfg.use_rotor_directions_for_joint_velocity:
+                if len(self._asset.cfg.rotor_directions) != self._asset.num_thrusters:
+                    raise ValueError(
+                        "Length of rotor_directions does not match num_thrusters. "
+                        f"Got {len(self._asset.cfg.rotor_directions)} vs {self._asset.num_thrusters}."
+                    )
+                if isinstance(self._thruster_ids, slice):
+                    thruster_index_list = list(range(self._asset.num_thrusters))
+                else:
+                    thruster_index_list = list(self._thruster_ids)
+                signs = torch.tensor(
+                    [self._asset.cfg.rotor_directions[i] for i in thruster_index_list],
+                    device=self.device,
+                    dtype=torch.float32,
+                )
+                self._joint_velocity_sign[:] = signs
+
     """
     Properties
     """
@@ -244,3 +284,17 @@ class ThrustAction(ActionTerm):
         """
         # Set thrust targets using thruster IDs
         self._asset.set_thrust_target(self.processed_actions, thruster_ids=self._thruster_ids)
+
+        # Optionally bind rotor joint velocity to thrust command
+        if self._bind_joint_velocity:
+            joint_vel_targets = self.processed_actions * self.cfg.joint_velocity_scale + self.cfg.joint_velocity_offset
+            if self._joint_velocity_sign is not None:
+                joint_vel_targets = joint_vel_targets * self._joint_velocity_sign
+
+            # Set velocity targets in articulation buffers (if available)
+            if self._asset.data.joint_vel_target is not None:
+                self._asset.set_joint_velocity_target(joint_vel_targets, joint_ids=self._rotor_joint_ids)
+
+            # Optional direct write to simulation for immediate visual spinning
+            if self.cfg.write_joint_velocity_to_sim:
+                self._asset.write_joint_velocity_to_sim(joint_vel_targets, joint_ids=self._rotor_joint_ids)

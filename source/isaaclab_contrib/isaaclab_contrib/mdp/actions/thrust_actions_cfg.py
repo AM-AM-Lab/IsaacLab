@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 from dataclasses import MISSING
+from typing import Sequence
 
 from isaaclab.managers.action_manager import ActionTerm, ActionTermCfg
 from isaaclab.utils import configclass
@@ -165,4 +166,37 @@ class ThrustActionCfg(ActionTermCfg):
     controlling thrust as deviations from the hover state.
 
     If ``False``, the manually specified :attr:`offset` value is used.
+    """
+
+    bind_joint_velocity_to_thrust: bool = False
+    """Whether to bind rotor joint velocity command to processed thrust command.
+
+    If enabled, this action term also drives joint velocity for the configured rotor joints,
+    in addition to setting thruster targets.
+    """
+
+    joint_names_expr: Sequence[str] | str | None = None
+    """Joint names (or regex) used for rotor spin binding.
+
+    If None and :attr:`bind_joint_velocity_to_thrust` is True, defaults to
+    ``<thruster_name>_joint`` for each resolved thruster.
+    """
+
+    joint_velocity_scale: float = 1.0
+    """Scale from processed thrust command to joint velocity target.
+
+    Joint velocity target is computed as:
+    ``joint_vel = processed_thrust * joint_velocity_scale + joint_velocity_offset``.
+    """
+
+    joint_velocity_offset: float = 0.0
+    """Offset added to joint velocity target when binding is enabled."""
+
+    use_rotor_directions_for_joint_velocity: bool = True
+    """Whether to multiply joint velocity target with ``rotor_directions`` sign."""
+
+    write_joint_velocity_to_sim: bool = False
+    """Whether to write computed rotor joint velocity directly into simulation each step.
+
+    This is useful for visualization when velocity-drive targets alone are not sufficient.
     """

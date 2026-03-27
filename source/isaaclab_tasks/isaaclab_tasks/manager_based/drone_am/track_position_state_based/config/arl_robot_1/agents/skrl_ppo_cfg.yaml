@@ -1,0 +1,107 @@
+# Copyright (c) 2022-2026, The Isaac Lab Project Developers (https://github.com/isaac-sim/IsaacLab/blob/main/CONTRIBUTORS.md).
+# All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
+seed: 42  # 随机种子（可复现）
+
+
+# Models are instantiated using skrl's model instantiator utility
+# https://skrl.readthedocs.io/en/latest/api/utils/model_instantiators.html
+models:
+  # policy / value 是否共享主干（False 表示分开定义）
+  separate: False
+  policy:
+    class: GaussianMixin
+    # 连续动作高斯策略：输出均值和 log_std
+    clip_actions: False
+    clip_log_std: True
+    min_log_std: -20.0
+    max_log_std: 2.0
+    initial_log_std: 0.0
+    network:
+      - name: mlp
+        input: STATES
+        # 前馈主干
+        layers: [256, 128, 64]
+        activations: elu
+      - name: gru
+        input: mlp
+        # 时序建模
+        type: GRU
+        layers: [64]
+        num_layers: 1
+    output: ACTIONS
+  value:
+    class: DeterministicMixin
+    # 价值网络（标量输出）
+    clip_actions: False
+    network:
+      - name: mlp
+        input: STATES
+        layers: [256, 128, 64]
+        activations: elu
+      - name: gru
+        input: mlp
+        type: GRU
+        layers: [64]
+        num_layers: 1
+    output: ONE
+
+
+# Rollout memory
+# https://skrl.readthedocs.io/en/latest/api/memories/random.html
+memory:
+  class: RandomMemory
+  memory_size: -1  # automatically determined (same as agent:rollouts)
+
+
+# PPO agent configuration (field names are from PPO_DEFAULT_CONFIG)
+# https://skrl.readthedocs.io/en/latest/api/agents/ppo.html
+agent:
+  class: PPO
+  # 每个环境每轮 rollout 步数
+  rollouts: 24
+  # 每轮优化强度
+  learning_epochs: 5
+  mini_batches: 4
+  # 折扣因子与 GAE 参数
+  discount_factor: 0.99
+  lambda: 0.95
+  learning_rate: 1.0e-03
+  learning_rate_scheduler: KLAdaptiveLR
+  learning_rate_scheduler_kwargs:
+    kl_threshold: 0.01
+  state_preprocessor: null
+  state_preprocessor_kwargs: null
+  value_preprocessor: RunningStandardScaler
+  value_preprocessor_kwargs: null
+  random_timesteps: 0
+  learning_starts: 0
+  # PPO 关键裁剪参数
+  grad_norm_clip: 1.0
+  ratio_clip: 0.2
+  value_clip: 0.2
+  clip_predicted_values: True
+  # 熵系数：鼓励探索
+  entropy_loss_scale: 0.005
+  value_loss_scale: 1.0
+  kl_threshold: 0.0
+  # 奖励整体缩放
+  rewards_shaper_scale: 0.6
+  time_limit_bootstrap: False
+  # logging and checkpoint
+  experiment:
+    directory: "arl_robot_1_track_position_state_based"
+    experiment_name: ""
+    write_interval: auto
+    checkpoint_interval: auto
+
+
+# Sequential trainer
+# https://skrl.readthedocs.io/en/latest/api/trainers/sequential.html
+trainer:
+  class: SequentialTrainer
+  # 总训练步数（可按算力提高）
+  timesteps: 36000
+  environment_info: log
