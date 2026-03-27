@@ -248,13 +248,13 @@ class RewardsCfg:
         weight=10.0,
         params={"asset_cfg": SceneEntityCfg("robot"), "std": 10.0},
     )
-    action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.05)
-    action_magnitude_l2 = RewTerm(func=mdp.action_l2, weight=-0.05)
+    action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.01)
+    action_magnitude_l2 = RewTerm(func=mdp.action_l2, weight=-0.01)
 
     # 提前终止（如坠落）额外惩罚
     termination_penalty = RewTerm(
         func=mdp.is_terminated,
-        weight=-5.0,
+        weight=-20.0,
     )
 
 
@@ -265,7 +265,7 @@ class TerminationsCfg:
     # 到最大时长结束
     time_out = DoneTerm(func=mdp.time_out, time_out=True)
     # 高度低于阈值视为坠落
-    crash = DoneTerm(func=mdp.root_height_below_minimum, params={"minimum_height": -0.5})
+    crash = DoneTerm(func=mdp.root_height_below_minimum, params={"minimum_height": -3})
 
 
 ##

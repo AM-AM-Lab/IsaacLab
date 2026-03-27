@@ -23,7 +23,7 @@ class TrackPositionNoObstaclesEnvPPORunnerCfg(RslRlOnPolicyRunnerCfg):
     # Actor-Critic 网络结构
     policy = RslRlPpoActorCriticCfg(
         # 初始策略探索噪声标准差
-        init_noise_std=0.5,
+        init_noise_std=0.2,
         actor_hidden_dims=[256, 128, 64],
         critic_hidden_dims=[256, 128, 64],
         activation="elu",
@@ -37,7 +37,7 @@ class TrackPositionNoObstaclesEnvPPORunnerCfg(RslRlOnPolicyRunnerCfg):
         # PPO clip 系数
         clip_param=0.2,
         # 熵奖励系数（鼓励探索）
-        entropy_coef=0.001,
+        entropy_coef=0.0002,
         # 每次 rollout 的优化 epoch 与 mini-batch 切分
         num_learning_epochs=4,
         num_mini_batches=4,
