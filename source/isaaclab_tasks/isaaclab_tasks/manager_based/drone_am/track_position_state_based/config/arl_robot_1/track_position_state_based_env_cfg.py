@@ -66,7 +66,7 @@ class CommandsCfg:
         ranges=mdp.DroneUniformPoseCommandCfg.Ranges(
             pos_x=(-0.0, 0.0),
             pos_y=(-0.0, 0.0),
-            pos_z=(-0.0, 0.0),
+            pos_z=(1.2, 1.2),
             roll=(-0.0, 0.0),
             pitch=(-0.0, 0.0),
             yaw=(-0.0, 0.0),
@@ -81,8 +81,8 @@ class ActionsCfg:
     # 12桨推力动作：processed = raw * scale + offset，并做 clip
     thrust_command = mdp.ThrustActionCfg(
         asset_name="robot",
-        scale=8.0,
-        offset=14.0,
+        scale=6.0,
+        offset=20.0,
         preserve_order=False,
         use_default_offset=False,
         bind_joint_velocity_to_thrust=True,
@@ -265,7 +265,7 @@ class TerminationsCfg:
     # 到最大时长结束
     time_out = DoneTerm(func=mdp.time_out, time_out=True)
     # 高度低于阈值视为坠落
-    crash = DoneTerm(func=mdp.root_height_below_minimum, params={"minimum_height": 0.0})
+    crash = DoneTerm(func=mdp.root_height_below_minimum, params={"minimum_height": -0.5})
 
 
 ##
